@@ -1,14 +1,14 @@
-import type React from "react"
+import { ThemeProvider } from "@/components/theme-provider"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
+import type React from "react"
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Alex.Dev | Portfolio",
-  description: "Personal portfolio of Alex, a computer science graduate and full-stack developer",
+  title: "Vamsi | Portfolio",
+  description: "Personal portfolio of Manoj Vamsi, a computer science graduate and full-stack developer",
     generator: 'v0.dev'
 }
 

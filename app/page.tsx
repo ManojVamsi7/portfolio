@@ -2,18 +2,18 @@
 
 import type React from "react"
 
-import { useRef } from "react"
-import { motion, useInView, useScroll } from "framer-motion"
-import { ArrowDown, Code, ExternalLink, Github, Mail, Monitor, Server } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
+import { motion, useInView, useScroll } from "framer-motion"
+import { ArrowDown, Code, ExternalLink, Github, Mail, Monitor, Server } from "lucide-react"
+import { useRef } from "react"
 
 // Add these imports at the top with the other imports
-import { useState, useEffect } from "react"
-import { Menu, Moon, Sun, FileText, X } from "lucide-react"
+import { FileText, Menu, Moon, Sun, X } from "lucide-react"
 import { useTheme } from "next-themes"
+import { useEffect, useState } from "react"
 
 export default function Portfolio() {
   const { scrollYProgress } = useScroll()
@@ -50,7 +50,7 @@ export default function Portfolio() {
             transition={{ duration: 0.5 }}
             className="text-xl font-bold dark:text-white"
           >
-            Alex.Dev
+            Vamsi
           </motion.div>
 
           {/* Desktop Navigation */}
@@ -142,7 +142,7 @@ export default function Portfolio() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-4xl md:text-6xl font-bold mb-6"
             >
-              <span className="block">Hello, I'm Alex.</span>
+              <span className="block">Hello, I'm Vamsi.</span>
               <motion.span
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -401,7 +401,7 @@ export default function Portfolio() {
       {/* Footer */}
       <footer className="py-8 border-t border-gray-100 dark:border-gray-800 dark:bg-gray-900">
         <div className="container mx-auto px-4 text-center text-gray-500 dark:text-gray-400 text-sm">
-          <p>© {new Date().getFullYear()} Alex.Dev. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Manoj Vamsi. All rights reserved.</p>
         </div>
       </footer>
     </div>
@@ -469,7 +469,7 @@ function MobileMenu({ isOpen, onClose, onNavigate, refs }: MobileMenuProps) {
       className="fixed inset-0 bg-white dark:bg-gray-900 z-50 flex flex-col"
     >
       <div className="flex justify-between items-center p-4 border-b border-gray-100 dark:border-gray-800">
-        <div className="text-xl font-bold dark:text-white">Alex.Dev</div>
+        <div className="text-xl font-bold dark:text-white">Vamsi</div>
         <Button variant="ghost" size="icon" onClick={onClose}>
           <X className="h-6 w-6" />
         </Button>
