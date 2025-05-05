@@ -2,18 +2,32 @@
 
 import type React from "react"
 
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
+import emailjs from "@emailjs/browser"
 import { motion, useInView, useScroll } from "framer-motion"
-import { ArrowDown, Code, ExternalLink, Github, Mail, Monitor, Server } from "lucide-react"
-import { useRef } from "react"
-
-// Add these imports at the top with the other imports
-import { FileText, Menu, Moon, Sun, X } from "lucide-react"
+import {
+  AlertCircle,
+  ArrowDown,
+  CheckCircle,
+  Code,
+  ExternalLink,
+  FileText,
+  Github,
+  Loader2,
+  Mail,
+  Menu,
+  Monitor,
+  Moon,
+  Server,
+  Sun,
+  X,
+} from "lucide-react"
 import { useTheme } from "next-themes"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 export default function Portfolio() {
   const { scrollYProgress } = useScroll()
@@ -26,12 +40,12 @@ export default function Portfolio() {
   const projectsInView = useInView(projectsRef, { once: true, amount: 0.3 })
   const contactInView = useInView(contactRef, { once: true, amount: 0.3 })
 
+  // Add state for mobile menu
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
   const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
     ref.current?.scrollIntoView({ behavior: "smooth" })
   }
-
-  // Add state for mobile menu at the top of the component
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
@@ -50,7 +64,7 @@ export default function Portfolio() {
             transition={{ duration: 0.5 }}
             className="text-xl font-bold dark:text-white"
           >
-            Vamsi
+          Vamsi
           </motion.div>
 
           {/* Desktop Navigation */}
@@ -295,7 +309,7 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* Contact Section */}
+      {/* Contact Section with EmailJS Integration */}
       <section ref={contactRef} className="py-20 bg-gray-50 dark:bg-gray-800">
         <div className="container mx-auto px-4">
           <motion.div
@@ -311,63 +325,7 @@ export default function Portfolio() {
           </motion.div>
 
           <div className="max-w-2xl mx-auto">
-            <motion.form
-              initial={{ opacity: 0, y: 20 }}
-              animate={contactInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="space-y-6"
-            >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label htmlFor="name" className="text-sm font-medium dark:text-gray-300">
-                    Name
-                  </label>
-                  <Input
-                    id="name"
-                    placeholder="Your name"
-                    className="border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:border-teal-500 focus:ring-teal-500"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="email" className="text-sm font-medium dark:text-gray-300">
-                    Email
-                  </label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="Your email"
-                    className="border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:border-teal-500 focus:ring-teal-500"
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <label htmlFor="subject" className="text-sm font-medium dark:text-gray-300">
-                  Subject
-                </label>
-                <Input
-                  id="subject"
-                  placeholder="Subject"
-                  className="border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:border-teal-500 focus:ring-teal-500"
-                />
-              </div>
-              <div className="space-y-2">
-                <label htmlFor="message" className="text-sm font-medium dark:text-gray-300">
-                  Message
-                </label>
-                <Textarea
-                  id="message"
-                  placeholder="Your message"
-                  rows={5}
-                  className="border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:border-teal-500 focus:ring-teal-500"
-                />
-              </div>
-              <Button
-                type="submit"
-                className="w-full bg-teal-500 hover:bg-teal-600 dark:bg-teal-600 dark:hover:bg-teal-700"
-              >
-                Send Message
-              </Button>
-            </motion.form>
+            <ContactForm inView={contactInView} />
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -401,14 +359,168 @@ export default function Portfolio() {
       {/* Footer */}
       <footer className="py-8 border-t border-gray-100 dark:border-gray-800 dark:bg-gray-900">
         <div className="container mx-auto px-4 text-center text-gray-500 dark:text-gray-400 text-sm">
-          <p>© {new Date().getFullYear()} Manoj Vamsi. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} Manoj Vamsi. All rights reserved.</p>
         </div>
       </footer>
     </div>
   )
 }
 
-// Add these new components before the SkillCard component
+// Contact Form Component with EmailJS
+function ContactForm({ inView }: { inView: boolean }) {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
+  const formRef = useRef<HTMLFormElement>(null)
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    // Basic validation
+    if (!formData.name || !formData.email || !formData.message) {
+      alert("Please fill in all required fields")
+      return
+    }
+
+    setIsSubmitting(true)
+    setSubmitStatus("idle")
+
+    try {
+      // Replace these with your actual EmailJS credentials
+      const serviceId = "service_8cr17ko"
+      const templateId = "template_4xgco5m"
+      const publicKey = "UFBcwHkxmtXzXqvpT"
+
+      await emailjs.sendForm(serviceId, templateId, formRef.current!, publicKey)
+
+      setSubmitStatus("success")
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+      })
+    } catch (error) {
+      console.error("Error sending email:", error)
+      setSubmitStatus("error")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay: 0.2 }}
+    >
+      {submitStatus === "success" && (
+        <Alert className="mb-6 bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-900">
+          <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
+          <AlertDescription className="text-green-600 dark:text-green-400">
+            Your message has been sent successfully! I'll get back to you soon.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {submitStatus === "error" && (
+        <Alert className="mb-6 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-900">
+          <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
+          <AlertDescription className="text-red-600 dark:text-red-400">
+            There was an error sending your message. Please try again later.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label htmlFor="name" className="text-sm font-medium dark:text-gray-300">
+              Name <span className="text-red-500">*</span>
+            </label>
+            <Input
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Your name"
+              className="border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:border-teal-500 focus:ring-teal-500"
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="email" className="text-sm font-medium dark:text-gray-300">
+              Email <span className="text-red-500">*</span>
+            </label>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Your email"
+              className="border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:border-teal-500 focus:ring-teal-500"
+              required
+            />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="subject" className="text-sm font-medium dark:text-gray-300">
+            Subject
+          </label>
+          <Input
+            id="subject"
+            name="subject"
+            value={formData.subject}
+            onChange={handleChange}
+            placeholder="Subject"
+            className="border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:border-teal-500 focus:ring-teal-500"
+          />
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="message" className="text-sm font-medium dark:text-gray-300">
+            Message <span className="text-red-500">*</span>
+          </label>
+          <Textarea
+            id="message"
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            placeholder="Your message"
+            rows={5}
+            className="border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:border-teal-500 focus:ring-teal-500"
+            required
+          />
+        </div>
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full bg-teal-500 hover:bg-teal-600 dark:bg-teal-600 dark:hover:bg-teal-700 disabled:opacity-70"
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Sending...
+            </>
+          ) : (
+            "Send Message"
+          )}
+        </Button>
+      </form>
+    </motion.div>
+  )
+}
 
 // Add ThemeToggle component
 function ThemeToggle() {
@@ -624,7 +736,3 @@ function ProjectCard({ title, description, tags, image, delay, inView }: Project
     </motion.div>
   )
 }
-
-// Update the contact section
-
-// Update the footer
