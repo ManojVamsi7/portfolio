@@ -366,7 +366,7 @@ export default function Portfolio() {
       {/* Footer */}
       <footer className="py-8 border-t border-gray-100 dark:border-gray-800 dark:bg-gray-900">
         <div className="container mx-auto px-4 text-center text-gray-500 dark:text-gray-400 text-sm">
-          <p>© {new Date().getFullYear()} Alex.Dev. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Manoj Vamsi. All rights reserved.</p>
         </div>
       </footer>
     </div>
