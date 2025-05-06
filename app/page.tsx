@@ -334,19 +334,26 @@ export default function Portfolio() {
               className="mt-12 flex justify-center space-x-6"
             >
               <a
-                href="#"
+                href="https://github.com/Manojvamsi7"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub Profile"
                 className="text-gray-500 dark:text-gray-400 hover:text-teal-500 dark:hover:text-teal-400 transition-colors"
               >
                 <Github size={24} />
               </a>
               <a
-                href="#"
+                href="mailto:manojvamsi.d07@gmail.com"
+                aria-label="Email Me"
                 className="text-gray-500 dark:text-gray-400 hover:text-teal-500 dark:hover:text-teal-400 transition-colors"
               >
                 <Mail size={24} />
               </a>
               <a
-                href="#"
+                href="https://linkedin.com/in/manoj-vamsi"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn Profile"
                 className="text-gray-500 dark:text-gray-400 hover:text-teal-500 dark:hover:text-teal-400 transition-colors"
               >
                 <ExternalLink size={24} />
@@ -359,7 +366,7 @@ export default function Portfolio() {
       {/* Footer */}
       <footer className="py-8 border-t border-gray-100 dark:border-gray-800 dark:bg-gray-900">
         <div className="container mx-auto px-4 text-center text-gray-500 dark:text-gray-400 text-sm">
-        <p>© {new Date().getFullYear()} Manoj Vamsi. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Alex.Dev. All rights reserved.</p>
         </div>
       </footer>
     </div>
