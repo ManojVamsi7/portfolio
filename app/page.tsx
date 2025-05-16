@@ -12,6 +12,8 @@ import { motion, useInView, useScroll } from "framer-motion"
 import {
   AlertCircle,
   ArrowDown,
+  Briefcase,
+  Calendar,
   CheckCircle,
   Code,
   ExternalLink,
@@ -33,15 +35,30 @@ export default function Portfolio() {
   const { scrollYProgress } = useScroll()
   const heroRef = useRef<HTMLDivElement>(null)
   const skillsRef = useRef<HTMLDivElement>(null)
+  const experienceRef = useRef<HTMLDivElement>(null) // New ref for experience section
   const projectsRef = useRef<HTMLDivElement>(null)
   const contactRef = useRef<HTMLDivElement>(null)
 
   const skillsInView = useInView(skillsRef, { once: true, amount: 0.3 })
+  const experienceInView = useInView(experienceRef, { once: true, amount: 0.3 }) // New inView for experience
   const projectsInView = useInView(projectsRef, { once: true, amount: 0.3 })
   const contactInView = useInView(contactRef, { once: true, amount: 0.3 })
 
   // Add state for mobile menu
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { theme } = useTheme()
+
+  // Prevent scrolling when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = "auto"
+    }
+    return () => {
+      document.body.style.overflow = "auto"
+    }
+  }, [mobileMenuOpen])
 
   const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
     ref.current?.scrollIntoView({ behavior: "smooth" })
@@ -51,12 +68,12 @@ export default function Portfolio() {
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       {/* Progress bar */}
       <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-teal-500 origin-left z-50"
+        className="fixed top-0 left-0 right-0 h-1 bg-teal-500 origin-left z-40"
         style={{ scaleX: scrollYProgress }}
       />
 
       {/* Navigation */}
-      <header className="fixed top-0 left-0 right-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm z-40 border-b border-gray-100 dark:border-gray-800">
+      <header className="fixed top-0 left-0 right-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm z-30 border-b border-gray-100 dark:border-gray-800">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -64,7 +81,7 @@ export default function Portfolio() {
             transition={{ duration: 0.5 }}
             className="text-xl font-bold dark:text-white"
           >
-          Vamsi
+            Vamsi
           </motion.div>
 
           {/* Desktop Navigation */}
@@ -85,6 +102,12 @@ export default function Portfolio() {
               className="text-gray-600 dark:text-gray-300 hover:text-teal-500 dark:hover:text-teal-400 transition-colors"
             >
               Skills
+            </button>
+            <button
+              onClick={() => scrollToSection(experienceRef)}
+              className="text-gray-600 dark:text-gray-300 hover:text-teal-500 dark:hover:text-teal-400 transition-colors"
+            >
+              Experience
             </button>
             <button
               onClick={() => scrollToSection(projectsRef)}
@@ -125,18 +148,100 @@ export default function Portfolio() {
             </Button>
           </div>
         </div>
-
-        {/* Mobile Menu */}
-        <MobileMenu
-          isOpen={mobileMenuOpen}
-          onClose={() => setMobileMenuOpen(false)}
-          onNavigate={(ref) => {
-            scrollToSection(ref)
-            setMobileMenuOpen(false)
-          }}
-          refs={{ heroRef, skillsRef, projectsRef, contactRef }}
-        />
       </header>
+
+      {/* Simple Mobile Menu - No animations, just a basic overlay */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 md:hidden" style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
+          <div
+            className="fixed inset-y-0 right-0 w-full max-w-sm overflow-y-auto"
+            style={{
+              backgroundColor: theme === "dark" ? "#111827" : "#ffffff",
+              boxShadow: "0 0 15px rgba(0, 0, 0, 0.2)",
+            }}
+          >
+            <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+              <div className="text-xl font-bold dark:text-white">Vamsi</div>
+              <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(false)}>
+                <X className="h-6 w-6" />
+              </Button>
+            </div>
+
+            <div className="p-4">
+              <nav className="flex flex-col space-y-4">
+                <button
+                  onClick={() => {
+                    scrollToSection(heroRef)
+                    setMobileMenuOpen(false)
+                  }}
+                  className="py-3 text-lg text-gray-800 dark:text-gray-200 hover:text-teal-500 dark:hover:text-teal-400"
+                >
+                  Home
+                </button>
+                <button
+                  onClick={() => {
+                    scrollToSection(skillsRef)
+                    setMobileMenuOpen(false)
+                  }}
+                  className="py-3 text-lg text-gray-800 dark:text-gray-200 hover:text-teal-500 dark:hover:text-teal-400"
+                >
+                  Skills
+                </button>
+                <button
+                  onClick={() => {
+                    scrollToSection(experienceRef)
+                    setMobileMenuOpen(false)
+                  }}
+                  className="py-3 text-lg text-gray-800 dark:text-gray-200 hover:text-teal-500 dark:hover:text-teal-400"
+                >
+                  Experience
+                </button>
+                <button
+                  onClick={() => {
+                    scrollToSection(projectsRef)
+                    setMobileMenuOpen(false)
+                  }}
+                  className="py-3 text-lg text-gray-800 dark:text-gray-200 hover:text-teal-500 dark:hover:text-teal-400"
+                >
+                  Projects
+                </button>
+                <button
+                  onClick={() => {
+                    scrollToSection(contactRef)
+                    setMobileMenuOpen(false)
+                  }}
+                  className="py-3 text-lg text-gray-800 dark:text-gray-200 hover:text-teal-500 dark:hover:text-teal-400"
+                >
+                  Contact
+                </button>
+              </nav>
+
+              <div className="mt-8 space-y-4">
+                <Button
+                  onClick={() => {
+                    window.open("/resume.pdf", "_blank")
+                    setMobileMenuOpen(false)
+                  }}
+                  variant="outline"
+                  className="w-full border-gray-300 dark:border-gray-700 flex items-center justify-center gap-2"
+                >
+                  <FileText className="h-4 w-4" />
+                  <span>Resume</span>
+                </Button>
+                <Button
+                  onClick={() => {
+                    scrollToSection(contactRef)
+                    setMobileMenuOpen(false)
+                  }}
+                  className="w-full bg-teal-500 hover:bg-teal-600 dark:bg-teal-600 dark:hover:bg-teal-700"
+                >
+                  Get in touch
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Hero Section */}
       <section ref={heroRef} className="min-h-screen flex items-center pt-20">
@@ -256,8 +361,29 @@ export default function Portfolio() {
         </div>
       </section>
 
+      {/* Experience Section */}
+      <section ref={experienceRef} className="py-20 dark:bg-gray-900">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={experienceInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+            className="max-w-3xl mx-auto mb-16 text-center"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 dark:text-white">Work Experience</h2>
+            <p className="text-gray-600 dark:text-gray-400">
+              My professional journey and the companies I've had the privilege to work with.
+            </p>
+          </motion.div>
+
+          <div className="max-w-4xl mx-auto">
+            <ExperienceTimeline inView={experienceInView} />
+          </div>
+        </div>
+      </section>
+
       {/* Projects Section */}
-      <section ref={projectsRef} className="py-20 dark:bg-gray-900">
+      <section ref={projectsRef} className="py-20 bg-gray-50 dark:bg-gray-800">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -277,31 +403,17 @@ export default function Portfolio() {
               title="E-commerce Platform"
               description="A full-featured online store with product management, cart functionality, and secure checkout process."
               tags={["Next.js", "TypeScript", "Stripe", "Tailwind"]}
-              image="/placeholder.svg?height=400&width=600"
+              image="/E-C.svg?height=400&width=600"
+              projectUrl="https://lumina-e-commerce.vercel.app/"
               delay={0}
-              inView={projectsInView}
-            />
-            <ProjectCard
-              title="Task Management App"
-              description="A collaborative task management tool with real-time updates, drag-and-drop interface, and team collaboration features."
-              tags={["React", "Firebase", "Framer Motion", "CSS Modules"]}
-              image="/placeholder.svg?height=400&width=600"
-              delay={0.2}
-              inView={projectsInView}
-            />
-            <ProjectCard
-              title="Portfolio Website"
-              description="A responsive portfolio website with smooth animations and modern design principles."
-              tags={["Next.js", "Framer Motion", "Tailwind CSS"]}
-              image="/placeholder.svg?height=400&width=600"
-              delay={0.4}
               inView={projectsInView}
             />
             <ProjectCard
               title="Weather Dashboard"
               description="A weather application with location-based forecasts, interactive maps, and historical data visualization."
               tags={["React", "Chart.js", "Weather API", "Styled Components"]}
-              image="/placeholder.svg?height=400&width=600"
+              image="/WD-1.svg?height=400&width=600"
+              projectUrl="https://weatherdasboard.vercel.app/"
               delay={0.6}
               inView={projectsInView}
             />
@@ -310,7 +422,7 @@ export default function Portfolio() {
       </section>
 
       {/* Contact Section with EmailJS Integration */}
-      <section ref={contactRef} className="py-20 bg-gray-50 dark:bg-gray-800">
+      <section ref={contactRef} className="py-20 dark:bg-gray-900">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -364,11 +476,90 @@ export default function Portfolio() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 border-t border-gray-100 dark:border-gray-800 dark:bg-gray-900">
+      <footer className="py-8 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800">
         <div className="container mx-auto px-4 text-center text-gray-500 dark:text-gray-400 text-sm">
-          <p>© {new Date().getFullYear()} Alex.Dev. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Manoj Vamsi. All rights reserved.</p>
         </div>
       </footer>
+    </div>
+  )
+}
+
+// Experience Timeline Component
+function ExperienceTimeline({ inView }: { inView: boolean }) {
+  const experiences = [
+    {
+      title: "PoweBI & Tableau Intern",
+      company: "OceanApps Techonlogies PVT LTD.",
+      period: "Jan 2025 - Apr 2025",
+      description:
+        "Assisted in designing interactive dashboards and visual reports using Power BI and Tableau. Analyzed large datasets to extract actionable insights and supported data-driven decision-making for business operations.",
+      skills: ["Power BI", "Tableau", "Data Visualization", "SQL", "Excel",]
+    },
+    {
+      title: "QA Tester Intern",
+      company: "Wyreflow Techonologies",
+      period: "Oct 2024 - Nov 2024",
+      description:
+        "Performed manual and automated testing to identify bugs and ensure software quality across web and mobile applications. Collaborated with developers to reproduce issues, write test cases, and verify fixes for enhanced user experience.",
+      skills: ["Manual Testing", "Automation Testing", "Test Cases", "Agile"],
+    },
+    {
+      title: "AIML Intern",
+      company: "Q-bits Learning",
+      period: "jun 2024 - Aug 2024",
+      description:
+        "Worked on developing and training machine learning models for real-world applications. Assisted in data preprocessing, model evaluation, and implementation of AI solutions using Python.",
+      skills: ["Python", "Machine Learning", "Deep Learning", "NumPy"],
+    },
+  ]
+
+  return (
+    <div className="relative">
+      {/* Timeline line */}
+      <div className="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 top-0 bottom-0 w-1 bg-gray-200 dark:bg-gray-700"></div>
+
+      {/* Experience items */}
+      {experiences.map((experience, index) => (
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: index * 0.2 }}
+          className={`relative flex flex-col md:flex-row md:items-center mb-12 ${
+            index % 2 === 0 ? "md:flex-row-reverse" : ""
+          }`}
+        >
+          {/* Timeline dot */}
+          <div className="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-teal-500 border-4 border-white dark:border-gray-900 z-10"></div>
+
+          {/* Content */}
+          <div className={`ml-8 md:ml-0 md:w-1/2 ${index % 2 === 0 ? "md:pr-12 md:text-right" : "md:pl-12"}`}>
+            <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
+              <div className="flex items-center mb-2">
+                <Briefcase className="h-5 w-5 text-teal-500 mr-2" />
+                <h3 className="text-xl font-bold dark:text-white">{experience.title}</h3>
+              </div>
+              <div className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">{experience.company}</div>
+              <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4">
+                <Calendar className="h-4 w-4 mr-1" />
+                {experience.period}
+              </div>
+              <p className="text-gray-600 dark:text-gray-400 mb-4">{experience.description}</p>
+              <div className="flex flex-wrap gap-2">
+                {experience.skills.map((skill, skillIndex) => (
+                  <span
+                    key={skillIndex}
+                    className="text-xs px-2 py-1 rounded-full bg-teal-100 text-teal-700 dark:bg-teal-900/50 dark:text-teal-300"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      ))}
     </div>
   )
 }
@@ -529,7 +720,7 @@ function ContactForm({ inView }: { inView: boolean }) {
   )
 }
 
-// Add ThemeToggle component
+// ThemeToggle component
 function ThemeToggle() {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
@@ -550,97 +741,17 @@ function ThemeToggle() {
   )
 }
 
-// Add ResumeButton component
+// ResumeButton component
 function ResumeButton() {
   return (
     <Button
       variant="outline"
       className="border-gray-300 dark:border-gray-700 flex items-center gap-2"
-      onClick={() => window.open("/resume.pdf", "_blank")}
+      onClick={() => window.open("/resume-e.pdf", "_blank")}
     >
       <FileText className="h-4 w-4" />
       <span>Resume</span>
     </Button>
-  )
-}
-
-// Add MobileMenu component
-interface MobileMenuProps {
-  isOpen: boolean
-  onClose: () => void
-  onNavigate: (ref: React.RefObject<HTMLDivElement>) => void
-  refs: {
-    heroRef: React.RefObject<HTMLDivElement>
-    skillsRef: React.RefObject<HTMLDivElement>
-    projectsRef: React.RefObject<HTMLDivElement>
-    contactRef: React.RefObject<HTMLDivElement>
-  }
-}
-
-function MobileMenu({ isOpen, onClose, onNavigate, refs }: MobileMenuProps) {
-  if (!isOpen) return null
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-white dark:bg-gray-900 z-50 flex flex-col"
-    >
-      <div className="flex justify-between items-center p-4 border-b border-gray-100 dark:border-gray-800">
-        <div className="text-xl font-bold dark:text-white">Vamsi</div>
-        <Button variant="ghost" size="icon" onClick={onClose}>
-          <X className="h-6 w-6" />
-        </Button>
-      </div>
-      <div className="flex flex-col p-4 space-y-6">
-        <button
-          onClick={() => onNavigate(refs.heroRef)}
-          className="py-2 text-lg text-gray-600 dark:text-gray-300 hover:text-teal-500 dark:hover:text-teal-400 transition-colors"
-        >
-          Home
-        </button>
-        <button
-          onClick={() => onNavigate(refs.skillsRef)}
-          className="py-2 text-lg text-gray-600 dark:text-gray-300 hover:text-teal-500 dark:hover:text-teal-400 transition-colors"
-        >
-          Skills
-        </button>
-        <button
-          onClick={() => onNavigate(refs.projectsRef)}
-          className="py-2 text-lg text-gray-600 dark:text-gray-300 hover:text-teal-500 dark:hover:text-teal-400 transition-colors"
-        >
-          Projects
-        </button>
-        <button
-          onClick={() => onNavigate(refs.contactRef)}
-          className="py-2 text-lg text-gray-600 dark:text-gray-300 hover:text-teal-500 dark:hover:text-teal-400 transition-colors"
-        >
-          Contact
-        </button>
-        <div className="pt-4 flex flex-col space-y-4">
-          <Button
-            onClick={() => {
-              window.open("/resume.pdf", "_blank")
-              onClose()
-            }}
-            variant="outline"
-            className="w-full border-gray-300 dark:border-gray-700 flex items-center justify-center gap-2"
-          >
-            <FileText className="h-4 w-4" />
-            <span>Resume</span>
-          </Button>
-          <Button
-            onClick={() => {
-              onNavigate(refs.contactRef)
-            }}
-            className="w-full bg-teal-500 hover:bg-teal-600 dark:bg-teal-600 dark:hover:bg-teal-700"
-          >
-            Get in touch
-          </Button>
-        </div>
-      </div>
-    </motion.div>
   )
 }
 
@@ -691,11 +802,12 @@ interface ProjectCardProps {
   description: string
   tags: string[]
   image: string
+  projectUrl: string
   delay: number
   inView: boolean
 }
 
-function ProjectCard({ title, description, tags, image, delay, inView }: ProjectCardProps) {
+function ProjectCard({ title, description, tags, image, projectUrl, delay, inView }: ProjectCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -712,7 +824,12 @@ function ProjectCard({ title, description, tags, image, delay, inView }: Project
           className="w-full h-48 object-cover"
         />
         <div className="absolute inset-0 bg-teal-500 bg-opacity-70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-          <Button variant="outline" className="text-white border-white hover:bg-white hover:text-teal-500">
+          <Button
+            variant="outline"
+            className="text-white border-white hover:bg-white hover:text-teal-500"
+            onClick={() => window.open(projectUrl, "_blank", "noopener noreferrer")}
+            aria-label={`View ${title} project`}
+          >
             View Project
           </Button>
         </div>
