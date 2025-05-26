@@ -413,7 +413,7 @@ export default function Portfolio() {
               description="A weather application with location-based forecasts, interactive maps, and historical data visualization."
               tags={["React", "Chart.js", "Weather API", "Styled Components"]}
               image="/WD-1.svg?height=400&width=600"
-              projectUrl="https://weatherdasboard.vercel.app/"
+              projectUrl="https://weather-dahboard-92wg.vercel.app/"
               delay={0.6}
               inView={projectsInView}
             />
