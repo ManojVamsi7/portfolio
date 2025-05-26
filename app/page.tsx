@@ -747,7 +747,7 @@ function ResumeButton() {
     <Button
       variant="outline"
       className="border-gray-300 dark:border-gray-700 flex items-center gap-2"
-      onClick={() => window.open("/resume-e.pdf", "_blank")}
+      onClick={() => window.open("/Manoj Vamsi Dakamarri.pdf", "_blank")}
     >
       <FileText className="h-4 w-4" />
       <span>Resume</span>
