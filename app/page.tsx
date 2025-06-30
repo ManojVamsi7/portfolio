@@ -219,7 +219,7 @@ export default function Portfolio() {
               <div className="mt-8 space-y-4">
                 <Button
                   onClick={() => {
-                    window.open("/resume.pdf", "_blank")
+                    window.open("/Dakamarri Manoj Vamsi.pdf", "_blank")
                     setMobileMenuOpen(false)
                   }}
                   variant="outline"
