@@ -177,7 +177,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - 📧 Email: manojvamsi.d07@gmail.com
 - 💼 LinkedIn: [manoj-vamsi](https://linkedin.com/in/manoj-vamsi)
 - 🐙 GitHub: [ManojVamsi7](https://github.com/ManojVamsi7)
-- 📱 Phone: +91 8125344558
+
 
 ---
 
