@@ -2,7 +2,6 @@
 
 # 🚀 Portfolio Website
 
-**Dakamarri Manoj Vamsi**
 
 *Transforming Ideas into Impactful Digital Experiences*
 
