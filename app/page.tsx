@@ -403,7 +403,7 @@ export default function Portfolio() {
               title="study-flow-tracker"
               description="A smart study timer and productivity tracker built with React and TailwindCSS, designed to help users manage focus sessions, breaks, and tasks seamlessly."
               tags={["Next.js", "TypeScript", "Tailwind"]}
-              image="/E-C.svg?height=400&width=600"
+              image="/E-C.png?height=400&width=600"
               projectUrl="https://study-flow-tracker.vercel.app/"
               delay={0}
               inView={projectsInView}
