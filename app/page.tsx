@@ -400,11 +400,11 @@ export default function Portfolio() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             <ProjectCard
-              title="E-commerce Platform"
-              description="A full-featured online store with product management, cart functionality, and secure checkout process."
-              tags={["Next.js", "TypeScript", "Stripe", "Tailwind"]}
+              title="study-flow-tracker"
+              description="A smart study timer and productivity tracker built with React and TailwindCSS, designed to help users manage focus sessions, breaks, and tasks seamlessly."
+              tags={["Next.js", "TypeScript", "Tailwind"]}
               image="/E-C.svg?height=400&width=600"
-              projectUrl="https://lumina-e-commerce.vercel.app/"
+              projectUrl="https://study-flow-tracker.vercel.app/"
               delay={0}
               inView={projectsInView}
             />
